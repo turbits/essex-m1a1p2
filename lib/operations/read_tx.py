@@ -1,25 +1,51 @@
-def read_tx(uid):
-  # find tx by uid, none = print & recall
-  # q to return to menu
+# +===================================================================+
+# Author: Trevor Woodman
+# Github: https://github.com/turbits
+# Project: Assignment 1, Part 2: Bankbook Program
+# Course: Launching into Computer Science (LCS_PCOM7E June 2022)
+# School: University of Essex
+# Date: July 27th, 2022
+# +===================================================================+
 
-def update_tx():
+from .. import io
+from .. import utility
+
+def read_tx(pretty=False, uid=None):
+  _uid = uid
+
+  if _uid is not None:
+    return next(tx for tx in io.database if tx["uid"] == _uid)
+
+  print ""
+  print "Reading a transaction"
+  print utility.cli_separator
+  print "Follow the prompts to find a transaction"
+  print "UID: <unix timestamp><6 character hexadecimal string>"
+  print "UID Example: 16589476959D3DD8"
+  print "Input q to return to the main menu"
+  
   # get uid
+  print "Please provide the UID of the transaction you wish to read"
+  _uid = raw_input("{0} ".format(utility.cli_prompt))
+  if _uid.lower() == "q":
+    utility.call_main()
+
   # find tx by uid, none = print & recall
-  # build new tx object
-  # check against schema, err = print & recall
-  # confirm overwrite
-  # overwrite existing tx and keep uid
-
-def delete_tx(uid):
-  # find tx by uid, none = print & recall
-  # confirm deletion, no = recall
-  # delete tx
-
-def display_all_tx():
-  # list empty = print & main
-  # iterate and list all tx (pretty)
-
-def sort_display_all_tx(property, order = "none"):
-  # list empty = print & main
-  # check property exists in schema, err = print & recall
-  # print sorted list (pretty)
+  try:
+    _tx_dict = next(tx for tx in io.database if tx["uid"] == _uid)
+    if pretty:
+      utility.pretty_print_tx(_tx_dict, True)
+    else:
+      print _tx_dict
+  except StopIteration:
+    print("Transaction not found, please try again")
+    read_tx()
+    raw_input("Press enter to return to main menu")
+    utility.call_main()
+  else:
+    try:
+      _tx_dict = next(tx for tx in io.database if tx["uid"] == _uid)
+      return _tx_dict
+    except StopIteration:
+      print("Transaction not found, please try again")
+      return None

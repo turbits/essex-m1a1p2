@@ -1,105 +1,139 @@
-from .. import utility
+# +===================================================================+
+# Author: Trevor Woodman
+# Github: https://github.com/turbits
+# Project: Assignment 1, Part 2: Bankbook Program
+# Course: Launching into Computer Science (LCS_PCOM7E June 2022)
+# School: University of Essex
+# Date: July 27th, 2022
+# +===================================================================+
 
-### This function walks the user through creating a valid transaction object
+import os
+from .. import utility
+from .. import io
+from ..transaction import Transaction
+
+# This function walks the user through creating a valid transaction object
+# and then adds it to the database
 def create_tx():
+  tx_obj = Transaction("", 0, 0, 0, "", "")
+  _prev_balance = None
+  _bal_change_op = None
+
   print ""
   print "Creating a new transaction"
-  print "=========================="
+  print utility.cli_separator
   print "Follow the prompts to create a new transaction"
 
-
   # generate uid (unix + 6 random hex char)
-  _uid = utility.gen_uid()
+  tx_obj.uid = utility.gen_uid()
 
   # generate datetime (unix timestamp)
-  _datetime = utility.gen_unix_timestamp()
+  tx_obj.datetime = utility.gen_unix_timestamp()
 
   # get the description
   print "Enter a description or press ENTER to use defaults"
-  _description = raw_input("%s " % utility.cli_prompt)
+  tx_obj.description = raw_input("{0} ".format(utility.cli_prompt))
 
   # check the transaction type (credit or debit)
   def tx_type_menu():
+    print ""
     print "Is this a credit or a debit?"
     print "1: Credit"
     print "2: Debit"
-    _credit_or_debit = raw_input("%s " % utility.cli_prompt)
+    _credit_or_debit = raw_input("{0} ".format(utility.cli_prompt))
     if _credit_or_debit == "1":
       return "credit"
     elif _credit_or_debit == "2":
       return "debit"
     else:
-      print "Invalid choice"
+      print "Invalid input"
       tx_type_menu()
 
   _credit_or_debit = tx_type_menu()
 
-  def confirm_tx_type():
+  # get transaction amount
+  def tx_amount():
+    print ""
     if _credit_or_debit == "credit":
       print "Enter credit amount: "
-      _credit = raw_input("%s " % utility.cli_prompt)
-      _debit = "0"
+      _input = raw_input("{0} ".format(utility.cli_prompt))
+      try:
+        tx_obj.credit = float(_input)
+        tx_obj.debit = float(0)
+      except ValueError:
+        print "Invalid input"
+        tx_amount()
     elif _credit_or_debit == "debit":
       print "Enter debit amount: "
-      _debit = raw_input("%s " % utility.cli_prompt)
-      _credit = "0"
+      _input = raw_input("{0} ".format(utility.cli_prompt))
+      try:
+        tx_obj.debit = float(_input)
+        tx_obj.credit = float(0)
+      except ValueError:
+        print "Invalid input"
+        tx_amount()
     else:
-      print "Invalid choice"
-      confirm_tx_type()  
-  confirm_tx_type()
+      print "Invalid input"
+      tx_amount()
+  tx_amount()
 
-  # calculate balance
+  # calculate the balance
   # if there is no previous tx, set balance to credit amount
-  print "Calculating balance..."
-  if database.length == 0:
-    _balance = _credit
+  if len(io.database) == 0:
+    tx_obj.balance = tx_obj.credit
   # if there is a previous tx, set balance to previous balance +/- credit and debit amounts
   else:
-    _balance = database[-1].balance + float(_credit) - float(_debit)
-  print "Balance %s" % _balance
+    _db_len = len(io.database)
+    _prev_balance = io.database[_db_len - 1]["balance"]
+    tx_obj.balance = _prev_balance + float(tx_obj.credit) - float(tx_obj.debit)
 
-  # create a description using tx type if none given
-  if _description == "":
-    if _credit > 0:
-      _description = "Credit"
-    elif _debit > 0:
-      _description = "Debit"
+  # create a description using tx type if no description given
+  if tx_obj.description == "":
+    if tx_obj.credit > 0:
+      tx_obj.description = "Credit"
+    elif tx_obj.debit > 0:
+      tx_obj.description = "Debit"
     else:
-      _description = "Other"
+      tx_obj.description = "Other"
   
   # check against schema, err = print & recall create
-  print "Verifying transaction..."
-  _tx_schema_check = utility.check_tx_schema(_uid, _datetime, _description, _credit, _debit, _balance)
-
-  if not _tx_schema_check.valid:
+  _tx_validation = utility.validate_tx(tx_obj)
+  if not _tx_validation["valid"]:
+    print ""
     print "Transaction is not valid, please try again:"
-    print _tx_schema_check.error
+    print _tx_validation["error"]
     raw_input("Press ENTER to restart transaction creation process")
     create_tx()
 
-  # display new tx
+  # display new tx for visual confirmation
+  print ""
   print utility.cli_separator
   print "Transaction:"
-  print "uid: %s" % _uid
-  print "datetime: %s" % _datetime
-  print "description: %s" % _description
-  print "credit: %s" % _credit
-  print "debit: %s" % _debit
-  print "balance: %s" % _balance
-  raw_input("Press ENTER to continue")
+  print "uid: {0}".format(tx_obj.uid)
+  print "datetime: {0}".format(tx_obj.datetime)
+  print "description: {0}".format(tx_obj.description)
+  print "credit: {0}".format(tx_obj.credit)
+  print "debit: {0}".format(tx_obj.debit)
+  print "balance: {0}".format(tx_obj.balance)
+  print utility.cli_separator
 
   # confirm create, no = print & recall
   def confirm_create():
     print "Is this correct? (y/n)"
-    _confirm_create = raw_input("%s" % utility.cli_prompt)
+    _confirm_create = raw_input("{0} ".format(utility.cli_prompt))
     if _confirm_create.lower() == "y":
       # add to database
-      database.append(Transaction(_uid, _datetime, _description, _credit, _debit, _balance))
-      print "Transaction added"
+      io.database.append(tx_obj.as_dict())
+      # save current database var to db.json file (overwrite)
+      io.save_db()
+
+      print "Transaction creation successful"
+      raw_input("Press ENTER to return to main menu")
+      utility.call_main()
     elif _confirm_create.lower() == "n":
       raw_input("Press ENTER to return to main menu")
-      return
+      utility.call_main()
     else:
-      print "Invalid choice"
+      print "Invalid input"
       confirm_create()
   confirm_create()

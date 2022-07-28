@@ -1,11 +1,3 @@
-# Bankbook Program
-
-I coded this program as part of the "Launching into Computer Science" course at the University of Essex.
-
-Module: Launching into Computer Science
-Assignment: 1, Part 2
-
-```
 # +===================================================================+
 # Author: Trevor Woodman
 # Github: https://github.com/turbits
@@ -14,4 +6,9 @@ Assignment: 1, Part 2
 # School: University of Essex
 # Date: July 27th, 2022
 # +===================================================================+
-```
+
+def delete_tx(uid):
+  # find tx by uid, none = print & recall
+  
+  # confirm deletion, no = recall
+  # delete tx
