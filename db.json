@@ -1,26 +1,10 @@
 [
   {
-    "description": "First deposit", 
-    "datetime": "1658965085", 
-    "credit": 250.0, 
+    "description": "Credit", 
+    "datetime": "1659116635", 
+    "credit": 45.0, 
     "debit": 0.0, 
-    "balance": 750.0, 
-    "uid": "16589648875CA159"
-  }, 
-  {
-    "description": "Second deposit", 
-    "datetime": "1658964900", 
-    "credit": 500.0, 
-    "debit": 0.0, 
-    "balance": 1250.0, 
-    "uid": "1658964900DA95C4"
-  }, 
-  {
-    "uid": "16589649259AEF20", 
-    "datetime": "1658964925", 
-    "credit": 0.0, 
-    "debit": 500.0, 
-    "balance": 750.0, 
-    "description": "First debit"
+    "balance": 45.0, 
+    "uid": "16591166356B84BD"
   }
 ]

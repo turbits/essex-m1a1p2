@@ -26,9 +26,9 @@ def read_tx(pretty=False, uid=None):
   
   # get uid
   print "Please provide the UID of the transaction you wish to read"
-  _uid = raw_input("{0} ".format(utility.cli_prompt))
-  if _uid.lower() == "q":
-    utility.call_main()
+  _uid = utility.get_input()
+  if _uid == "q":
+    return utility.call_main()
 
   # find tx by uid, none = print & recall
   try:
@@ -38,14 +38,15 @@ def read_tx(pretty=False, uid=None):
     else:
       print _tx_dict
   except StopIteration:
-    print("Transaction not found, please try again")
+    print "Transaction not found, please try again"
     read_tx()
-    raw_input("Press enter to return to main menu")
-    utility.call_main()
+    print "Press ENTER to return to main menu"
+    utility.get_input()
+    return utility.call_main()
   else:
     try:
       _tx_dict = next(tx for tx in io.database if tx["uid"] == _uid)
       return _tx_dict
     except StopIteration:
-      print("Transaction not found, please try again")
+      print "Transaction not found, please try again"
       return None

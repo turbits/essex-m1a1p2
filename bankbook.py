@@ -24,7 +24,7 @@ def show_title():
 def main_menu():
   print ""
   show_title()
-    # check for existing db. if none, create new
+  # check for existing db. if none, create new
   db_exist = io.check_db()
   if db_exist:
     io.load_db()
@@ -35,19 +35,20 @@ def main_menu():
   print "Current account balance: ${:,.2f}".format(_bal)
   print utility.cli_separator
   print "Please select an option:"
-  print("""1: Create transaction
+  print """1: Create transaction
 2: Find (read) transaction
 3: Update transaction
 4: Delete transaction
 5: Display all transactions
 6: Sort and display all transactions
 7: Display transaction schema
+8: Delete and recreate database
 w: Show current db var (for debugging)
 e: Show current db.json (for debugging)
 r: Show current balance (for debugging)
-q: Exit program""")
+q: Exit program"""
   print utility.cli_separator
-  choice = raw_input("{0} ".format(utility.cli_prompt).lower())
+  choice = utility.get_input()
 
   if choice == "q":
     exit()
@@ -72,24 +73,50 @@ q: Exit program""")
   elif choice == "7":
     # show_tx_schema()
     main_menu()
+  elif choice == "8":
+    print ""
+    print "Database Deletion"
+    print utility.cli_separator
+    print "This will delete the current database and create a new one"
+    print "All transactions will be permanently deleted"
+    print "Are you sure you want to recreate the database? (y/n)"
+    _confirm_delete = utility.get_input()
+    if _confirm_delete == "y":
+      # second confirm
+      print "Are you absolutely sure you want to recreate the database? (y/n)"
+      _confirm_delete = utility.get_input()
+    if _confirm_delete == "y":
+      # recreate db
+      io.delete_db()
+      io.create_db()
+      print "Press ENTER to return to main menu"
+      utility.get_input()
+      main_menu()
+    else:
+      print "Press ENTER to return to main menu"
+      utility.get_input()
+      main_menu()
   elif choice == "w":
     # get db var
     io.get_db_var()
-    raw_input("Press ENTER to return to main menu")
+    print "Press ENTER to return to main menu"
+    utility.get_input()
     main_menu()
   elif choice == "e":
     # get db json
     io.get_db_json()
-    raw_input("Press ENTER to return to main menu")
+    print "Press ENTER to return to main menu"
+    utility.get_input()
     main_menu()
   elif choice == "r":
     # get balance
     bal = utility.get_balance()
     print "Current account balance: ${:,.2f}".format(_bal)
-    raw_input("Press ENTER to return to main menu")
+    print "Press ENTER to return to main menu"
+    utility.get_input()
     main_menu()
   else:
-    print("Invalid choice")
+    print "Invalid selection"
     main_menu()
 
 def __main__():

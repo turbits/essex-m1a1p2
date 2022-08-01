@@ -15,6 +15,12 @@ import io
 cli_prompt = "$"
 cli_separator = "============================================="
 
+def get_input(lower=True):
+  if lower:
+    return raw_input("{0} ".format(cli_prompt).lower())
+  else:
+    return raw_input("{0} ".format(cli_prompt))
+
 def call_main():
   # call the main script
   os.system("python bankbook.py")
@@ -43,7 +49,7 @@ def gen_uid():
 
 def show_tx_schema():
   # in case we want to see the schema
-  print("""
+  print """
   Transaction Schema
   ==================================
   property: <data type or description>
@@ -54,7 +60,7 @@ def show_tx_schema():
   credit: float
   debit: float
   balance: float
-  """)
+  """
 
 def validate_tx(tx):
   # basic type checking and some string length checking for rudimentary schema validation
@@ -101,20 +107,20 @@ def recalculate_balances(index):
 def pretty_print_tx(tx, dict=False):
   if dict:
     # prints a transaction from a dict
-    print("""uid: {0}
+    print """uid: {0}
 datetime: {1}
 description: {2}
 credit: {3}
 debit: {4}
-balance: {5}""".format(tx["uid"], tx["datetime"], tx["description"], tx["credit"], tx["debit"], tx["balance"]))
+balance: {5}""".format(tx["uid"], tx["datetime"], tx["description"], tx["credit"], tx["debit"], tx["balance"])
   else:
     # prints a transaction from a Transaction object
-    print("""uid: {0}
+    print """uid: {0}
 datetime: {1}
 description: {2}
 credit: {3}
 debit: {4}
-balance: {5}""".format(tx.uid, tx.datetime, tx.description, tx.credit, tx.debit, tx.balance))
+balance: {5}""".format(tx.uid, tx.datetime, tx.description, tx.credit, tx.debit, tx.balance)
 
 def find_index_by_uid(uid):
   # finds the index of a transaction by its uid

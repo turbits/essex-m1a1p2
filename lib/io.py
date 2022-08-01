@@ -49,6 +49,10 @@ def save_db():
       print "Error saving to database, check file permissions"
       return
 
+def delete_db():
+  os.remove(db_path)
+  print "Database file deleted: ./db.json"
+
 def get_db_var():
   print database
 

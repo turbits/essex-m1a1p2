@@ -25,16 +25,16 @@ def update_tx():
   print "UID Example: 16589476959D3DD8"
   print "Input q to return to the main menu"
   # get uid
-  _uid = raw_input("{0} ".format(utility.cli_prompt))
-  if _uid.lower() == "q":
-    utility.call_main()
+  _uid = raw_input("{0} ".format(utility.cli_prompt)).lower()
+  if _uid == "q":
+    return utility.call_main()
   
   # find tx by uid, none = print & recall
   try:
     _old_tx = read_tx(False, _uid)
     _old_tx_index = utility.find_index_by_uid(_old_tx["uid"])
   except:
-    print("Transaction not found, please try again")
+    print "Transaction not found, please try again"
     update_tx()
   
   # build new tx object
@@ -113,8 +113,8 @@ def update_tx():
   utility.pretty_print_tx(_new_tx, False)
   print "IMPORTANT: This will recalculate the balances of all transactions that come after the updated transaction"
   print "Are you sure you wish to continue? (y/n)"
-  _confirm_create = raw_input("{0} ".format(utility.cli_prompt))
-  if _confirm_create.lower() == "y":
+  _confirm_create = raw_input("{0} ".format(utility.cli_prompt)).lower()
+  if _confirm_create == "y":
     # overwrite tx
     io.database[_old_tx_index] = _new_tx.as_dict()
     # recalculate balances
@@ -124,10 +124,10 @@ def update_tx():
 
     print "Transaction update successful"
     raw_input("Press ENTER to return to main menu")
-    utility.call_main()
-  elif _confirm_create.lower() == "n":
+    return utility.call_main()
+  elif _confirm_create == "n":
     raw_input("Press ENTER to return to main menu")
-    utility.call_main()
+    return utility.call_main()
   else:
     print "Invalid input"
     confirm_create()

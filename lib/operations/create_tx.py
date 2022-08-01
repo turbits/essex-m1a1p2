@@ -32,7 +32,10 @@ def create_tx():
 
   # get the description
   print "Enter a description or press ENTER to use defaults"
-  tx_obj.description = raw_input("{0} ".format(utility.cli_prompt))
+  print "To quit, enter q"
+  tx_obj.description = utility.get_input()
+  if tx_obj.description.lower() == "q":
+    return utility.call_main()
 
   # check the transaction type (credit or debit)
   def tx_type_menu():
@@ -40,7 +43,7 @@ def create_tx():
     print "Is this a credit or a debit?"
     print "1: Credit"
     print "2: Debit"
-    _credit_or_debit = raw_input("{0} ".format(utility.cli_prompt))
+    _credit_or_debit = utility.get_input()
     if _credit_or_debit == "1":
       return "credit"
     elif _credit_or_debit == "2":
@@ -56,7 +59,7 @@ def create_tx():
     print ""
     if _credit_or_debit == "credit":
       print "Enter credit amount: "
-      _input = raw_input("{0} ".format(utility.cli_prompt))
+      _input = utility.get_input()
       try:
         tx_obj.credit = float(_input)
         tx_obj.debit = float(0)
@@ -65,7 +68,7 @@ def create_tx():
         tx_amount()
     elif _credit_or_debit == "debit":
       print "Enter debit amount: "
-      _input = raw_input("{0} ".format(utility.cli_prompt))
+      _input = utility.get_input()
       try:
         tx_obj.debit = float(_input)
         tx_obj.credit = float(0)
@@ -75,7 +78,6 @@ def create_tx():
     else:
       print "Invalid input"
       tx_amount()
-  tx_amount()
 
   # calculate the balance
   # if there is no previous tx, set balance to credit amount
@@ -102,7 +104,8 @@ def create_tx():
     print ""
     print "Transaction is not valid, please try again:"
     print _tx_validation["error"]
-    raw_input("Press ENTER to restart transaction creation process")
+    print "Press ENTER to restart transaction creation process"
+    utility.get_input()
     create_tx()
 
   # display new tx for visual confirmation
@@ -120,20 +123,21 @@ def create_tx():
   # confirm create, no = print & recall
   def confirm_create():
     print "Is this correct? (y/n)"
-    _confirm_create = raw_input("{0} ".format(utility.cli_prompt))
-    if _confirm_create.lower() == "y":
+    _confirm_create = utility.get_input()
+    if _confirm_create == "y":
       # add to database
       io.database.append(tx_obj.as_dict())
       # save current database var to db.json file (overwrite)
       io.save_db()
 
       print "Transaction creation successful"
-      raw_input("Press ENTER to return to main menu")
-      utility.call_main()
-    elif _confirm_create.lower() == "n":
-      raw_input("Press ENTER to return to main menu")
-      utility.call_main()
+      print "Press ENTER to return to main menu"
+      utility.get_input()
+      return utility.call_main()
+    elif _confirm_create == "n":
+      print "Press ENTER to return to main menu"
+      utility.get_input()
+      return utility.call_main()
     else:
       print "Invalid input"
       confirm_create()
-  confirm_create()
