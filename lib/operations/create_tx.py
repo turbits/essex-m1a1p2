@@ -22,7 +22,7 @@ def create_tx():
   print ""
   print "Creating a new transaction"
   print utility.cli_separator
-  print "Follow the prompts to create a new transaction"
+  print "Follow the prompts to create a new transaction. To exit, enter q"
 
   # generate uid (unix + 6 random hex char)
   tx_obj.uid = utility.gen_uid()
@@ -32,7 +32,6 @@ def create_tx():
 
   # get the description
   print "Enter a description or press ENTER to use defaults"
-  print "To quit, enter q"
   tx_obj.description = utility.get_input()
   if tx_obj.description.lower() == "q":
     return utility.call_main()
