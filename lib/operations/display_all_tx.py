@@ -13,8 +13,7 @@ from .. import io
 
 def display_all_tx(pretty=True):
   if len(io.database) == 0:
-    print ""
-    print "No transactions to display"
+    print "\nNo transactions to display"
     print "Press ENTER to return to main menu"
     utility.get_input()
     return utility.call_main()
@@ -23,7 +22,6 @@ def display_all_tx(pretty=True):
   for tx in io.database:
     utility.pretty_print_tx(tx, True)
     print utility.cli_separator
-  print ""
-  print "Press enter to return to main menu"
+  print "\n Press ENTER to return to main menu"
   utility.get_input()
   return utility.call_main()

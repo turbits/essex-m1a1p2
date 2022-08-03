@@ -10,8 +10,10 @@
 from .. import utility
 
 def delete_tx(uid):
-  print ""
-  print "Delete a transaction"
+
+  _tx_dict = {}
+
+  print "\nDelete a transaction"
   print utility.cli_separator
   print "Follow the prompts to delete a transaction"
   print "This is a PERMANENT delete"
@@ -20,35 +22,38 @@ def delete_tx(uid):
   print "Input q to return to the main menu"
 
   # get uid of tx to delete
-  print "Please provide the UID of the transaction you wish to read"
+  print "Please provide the UID of the transaction you wish to delete"
   _uid = utility.get_input()
   if _uid == "q":
     return utility.call_main()
+  
+  # find the tx if exists
+  try:
+    _tx_dict = next(tx for tx in io.database if tx["uid"] == _uid)
+  except StopIteration:
+    print "\nTransaction not found, please try again"
+    print "Press ENTER to retry operation"
+    utility.get_input()
+    delete_tx()
 
-  # confirm deletion, no = recall
-  print "Are you sure you want to delete this transaction? (y/n)"
+  # confirm deletion
+  print "\nAre you sure you want to delete this transaction? (y/n)"
   _confirm = utility.get_input()
 
   if _confirm == "y":
-    print "Are you absolutely sure you want to delete this transaction? (y/n)"
+    print "\nAre you absolutely sure you want to delete this transaction? (y/n)"
     _confirm = utility.get_input()
 
-  # delete tx
+  # try delete tx
   if _confirm == "y":
     try:
-      _tx_dict = next(tx for tx in io.database if tx["uid"] == _uid)
       io.database.remove(_tx_dict)
-      print "Transaction deleted"
-    except StopIteration:
-      print "Transaction not found, please try again"
+      print "\nTransaction deleted"
+    except:
+      print "\nError removing transaction from database, please try again"
+      print "Press ENTER to retry operation"
       delete_tx()
-      print "Press ENTER to return to main menu"
-      utility.get_input()
-      return utility.call_main()
-    else:
-      try:
-        _tx_dict = next(tx for tx in io.database if tx["uid"] == _uid)
-        return _tx_dict
-      except StopIteration:
-        print "Transaction not found, please try again"
-        return None
+  
+  print "\nPress ENTER to return to main menu"
+  utility.get_input()
+  return utility.call_main()

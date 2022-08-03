@@ -16,8 +16,7 @@ def read_tx(pretty=False, uid=None):
   if _uid is not None:
     return next(tx for tx in io.database if tx["uid"] == _uid)
 
-  print ""
-  print "Reading a transaction"
+  print "\nReading a transaction"
   print utility.cli_separator
   print "Follow the prompts to find a transaction"
   print "UID: <unix timestamp><6 character hexadecimal string>"
@@ -25,7 +24,7 @@ def read_tx(pretty=False, uid=None):
   print "Input q to return to the main menu"
   
   # get uid
-  print "Please provide the UID of the transaction you wish to read"
+  print "\nPlease provide the UID of the transaction you wish to read"
   _uid = utility.get_input()
   if _uid == "q":
     return utility.call_main()
@@ -33,20 +32,27 @@ def read_tx(pretty=False, uid=None):
   # find tx by uid, none = print & recall
   try:
     _tx_dict = next(tx for tx in io.database if tx["uid"] == _uid)
-    if pretty:
-      utility.pretty_print_tx(_tx_dict, True)
-    else:
-      print _tx_dict
-  except StopIteration:
-    print "Transaction not found, please try again"
-    read_tx()
-    print "Press ENTER to return to main menu"
+    # pretty print the transaction
+    print ""
+    print utility.cli_separator
+    utility.pretty_print_tx(_tx_dict, True)
+    print utility.cli_separator
+
+    print "\nPress ENTER to return to main menu"
     utility.get_input()
     return utility.call_main()
+  except StopIteration:
+    print "\nTransaction not found, please try again"
+    print "Press ENTER to retry operation"
+    utility.get_input()
+    read_tx()
   else:
     try:
       _tx_dict = next(tx for tx in io.database if tx["uid"] == _uid)
       return _tx_dict
     except StopIteration:
-      print "Transaction not found, please try again"
-      return None
+      print "\nTransaction not found, please try again"
+
+  print "\nPress ENTER to return to main menu"
+  utility.get_input()
+  return utility.call_main()

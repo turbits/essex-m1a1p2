@@ -12,8 +12,8 @@ from .. import utility
 from .. import io
 from ..transaction import Transaction
 
-# This function walks the user through creating a valid transaction object
-# and then adds it to the database
+# This function walks the user through creating a valid tx object,
+# validates it, then adds it to the database
 def create_tx():
   tx_obj = Transaction("", 0, 0, 0, "", "")
   _prev_balance = None
@@ -25,7 +25,7 @@ def create_tx():
   print "Follow the prompts to create a new transaction."
   print "To return to the main menu, enter q"
 
-  # generate uid (unix + 6 random hex char)
+  # generate uid (unix ts + 6 random hex char)
   tx_obj.uid = utility.gen_uid()
 
   # generate datetime (unix timestamp)
@@ -51,7 +51,6 @@ def create_tx():
     else:
       print "Invalid input"
       tx_type_menu()
-
   _credit_or_debit = tx_type_menu()
 
   # get transaction amount
@@ -78,6 +77,7 @@ def create_tx():
     else:
       print "Invalid input"
       tx_amount()
+  tx_amount()
 
   # calculate the balance
   # if there is no previous tx, set balance to credit amount
@@ -141,3 +141,4 @@ def create_tx():
     else:
       print "Invalid input"
       confirm_create()
+  confirm_create()

@@ -1,10 +1,11 @@
 # +===================================================================+
 # Author: Trevor Woodman
 # Github: https://github.com/turbits
+# Repo: https://github.com/turbits/essex-m1a1p2
 # Project: Assignment 1, Part 2: Bankbook Program
 # Course: Launching into Computer Science (LCS_PCOM7E June 2022)
 # School: University of Essex
-# Date: July 27th, 2022
+# Date: July/August, 2022
 # +===================================================================+
 
 import os
@@ -105,6 +106,7 @@ def recalculate_balances(index):
   return
 
 def pretty_print_tx(tx, dict=False):
+  # dict dot notation not supported in Python 2.x?
   if dict:
     # prints a transaction from a dict
     print """uid: {0}
