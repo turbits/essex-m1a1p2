@@ -50,18 +50,19 @@ def gen_uid():
 
 def show_tx_schema():
   # in case we want to see the schema
-  print """
-  Transaction Schema
-  ==================================
-  property: <data type or description>
-  ==================================
-  uid: int (truncated unix timestamp) + 6 random hex chars
-  datetime: int (truncated unix timestamp)
-  description: string
-  credit: float
-  debit: float
-  balance: float
-  """
+  print """\nTransaction Schema
+==================================
+property: <data type or description>
+==================================
+uid: [Custom UID Type] ex: 1659562753141D91 (truncated unix timestamp + 6 random hex chars)
+datetime: [Int] ex: 1659562753 (truncated unix timestamp)
+description: [String] ex: Debit
+credit: [Float] ex: 0.00
+debit: [Float] ex: 4.00
+balance: [Float] ex: 56.54"""
+  print "\nPress ENTER to return to main menu"
+  get_input()
+  call_main()
 
 def validate_tx(tx):
   # basic type checking and some string length checking for rudimentary schema validation

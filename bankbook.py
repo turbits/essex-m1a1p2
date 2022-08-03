@@ -13,6 +13,7 @@ from lib.operations.create_tx import create_tx
 from lib.operations.display_all_tx import display_all_tx
 from lib.operations.read_tx import read_tx
 from lib.operations.update_tx import update_tx
+from lib.operations.delete_tx import delete_tx
 from lib import ascii_art
 from lib import utility
 from lib import io
@@ -54,26 +55,20 @@ q: Exit program"""
   if choice == "q":
     exit()
   elif choice == "1":
-    # create_tx()
     create_tx()
   elif choice == "2":
-    # read_tx()
     read_tx(True)
   elif choice == "3":
-    # update_tx()
     update_tx()
   elif choice == "4":
-    # delete_tx()
-    main_menu()
+    delete_tx()
   elif choice == "5":
-    # display_all_tx()
     display_all_tx()
   elif choice == "6":
     # sort_display_all_tx()
     main_menu()
   elif choice == "7":
-    # show_tx_schema()
-    main_menu()
+    utility.show_tx_schema()
   elif choice == "8":
     print ""
     print "Database Deletion"
