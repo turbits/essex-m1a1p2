@@ -22,7 +22,8 @@ def create_tx():
   print ""
   print "Creating a new transaction"
   print utility.cli_separator
-  print "Follow the prompts to create a new transaction. To exit, enter q"
+  print "Follow the prompts to create a new transaction."
+  print "To return to the main menu, enter q"
 
   # generate uid (unix + 6 random hex char)
   tx_obj.uid = utility.gen_uid()
