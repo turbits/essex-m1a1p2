@@ -14,6 +14,7 @@ from lib.operations.display_all_tx import display_all_tx
 from lib.operations.read_tx import read_tx
 from lib.operations.update_tx import update_tx
 from lib.operations.delete_tx import delete_tx
+from lib.operations.sort_display_all_tx import sort_display_all_tx
 from lib import ascii_art
 from lib import utility
 from lib import io
@@ -65,7 +66,7 @@ q: Exit program"""
   elif choice == "5":
     display_all_tx()
   elif choice == "6":
-    # sort_display_all_tx()
+    sort_display_all_tx()
     main_menu()
   elif choice == "7":
     utility.show_tx_schema()

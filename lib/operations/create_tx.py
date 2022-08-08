@@ -105,7 +105,7 @@ def create_tx():
     print ""
     print "Transaction is not valid, please try again:"
     print _tx_validation["error"]
-    print "Press ENTER to restart transaction creation process"
+    print "\nPress ENTER to restart transaction creation process"
     utility.get_input()
     create_tx()
 

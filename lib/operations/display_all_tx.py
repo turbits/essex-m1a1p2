@@ -23,6 +23,6 @@ def display_all_tx(pretty=True):
   for tx in io.database:
     utility.pretty_print_tx(tx, True)
     print utility.cli_separator
-  print "\n Press ENTER to return to main menu"
+  print "\nPress ENTER to return to main menu"
   utility.get_input()
   return utility.call_main()
