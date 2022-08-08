@@ -11,6 +11,7 @@
 from .. import utility
 from ..transaction import Transaction
 from .. import io
+from display_all_tx import display_all_tx
 
 
 def sort_display_all_tx(order = "none"):
@@ -48,12 +49,7 @@ def sort_display_all_tx(order = "none"):
     _prop = "debit"
   elif _choice == "4":
     _prop = "balance"
-  
-  # sanity check
-  # DEBUG
-  print "type of _prop"
-  print _prop
-  print type(_prop)
+
   
   # check property exists in schema, err = print & recall
   if not getattr(_temp_tx, str(_prop)):
@@ -61,13 +57,39 @@ def sort_display_all_tx(order = "none"):
     print "Press ENTER to retry operation"
     utility.get_input()
     return sort_display_all_tx()
-  else:
-    # DEBUG
-    print "prop exists"
-    utility.get_input()
-    utility.call_main()
-  
+
   # get order; on invalid order recall func (none, dec, inc)
+  _choice = utility.get_input()
+  _order = order
+  print "Choose a sort order; if none is provided this operation"
+  print "will use the passed in value, by default 'none'"
+  print "Sort order: {0}".format(order)
+  print """1: None; will not sort the dataset
+2: Dec : will sort the dataset DECREMENTING
+3: Inc : will sort the dataset INCREMENTING
+q: Exit to main menu"""
 
+  if _choice == "q":
+    return utility.call_main()
+  elif _choice == "1":
+    _order = "none"
+  elif _choice == "2":
+    _order = "dec"
+  elif _choice == "3":
+    _order = "inc"
+  else:
+    print "Invalid choice"
+    return sort_display_all_tx()
+  
+  # if order = none, display data as-is (call display_all_tx())
+  display_all_tx()
+  print "Press ENTER to return to main menu"
+  utility.get_input()
+  utility.call_main()
 
-  # print sorted list (pretty)
+  # get data
+
+  # sort data by prop/order and store in new dict/arr
+
+  # display sorted data
+
