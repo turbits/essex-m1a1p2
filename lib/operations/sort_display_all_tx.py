@@ -14,6 +14,8 @@ from .. import io
 
 
 def sort_display_all_tx(order = "none"):
+  _temp_tx = Transaction("", 0, 0, 0, "", "")
+
   # list empty = print & main
   if len(io.database) == 0:
     print "\nNo transactions to display"
@@ -54,15 +56,17 @@ def sort_display_all_tx(order = "none"):
   print type(_prop)
   
   # check property exists in schema, err = print & recall
-  if not Transaction.has_key(_prop):
+  if not getattr(_temp_tx, str(_prop)):
     print "'{0}' is not a valid property on Transaction object".format(_prop)
     print "Press ENTER to retry operation"
     utility.get_input()
+    return sort_display_all_tx()
   else:
     # DEBUG
     print "prop exists"
     utility.get_input()
     utility.call_main()
+  
   # get order; on invalid order recall func (none, dec, inc)
 
 
