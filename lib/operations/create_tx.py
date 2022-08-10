@@ -15,10 +15,40 @@ from ..transaction import Transaction
 
 # This function walks the user through creating a valid tx object,
 # validates it, then adds it to the database
-def create_tx():
-  tx_obj = Transaction("", 0, 0, 0, "", "")
+def create_tx(tx_obj=None):
+  _tx_obj = Transaction("", 0, 0, 0, "", "")
   _prev_balance = None
   _bal_change_op = None
+
+  # confirm create, no = print & recall
+  def confirm_create():
+    print "Is this correct? (y/n)"
+    _confirm_create = utility.get_input()
+    if _confirm_create == "y":
+      # add to database
+      io.database.append(_tx_obj.as_dict())
+      # save current database var to db.json file (overwrite)
+      io.save_db()
+
+      print "Transaction creation successful"
+      print "Press ENTER to return to main menu"
+      utility.get_input()
+      return utility.call_main()
+    elif _confirm_create == "n":
+      print "Press ENTER to return to main menu"
+      utility.get_input()
+      return utility.call_main()
+    else:
+      print "Invalid input"
+      confirm_create()
+
+  # bypass creation if tx_obj passed in
+  if tx_obj is not None:
+    print "Transaction to be created:"
+    print utility.cli_seperator
+    utility.pretty_print_tx(tx_obj)
+    print utility.cli_seperator
+    confirm_create()
 
   print ""
   print "Creating a new transaction"
@@ -27,15 +57,15 @@ def create_tx():
   print "To return to the main menu, enter q"
 
   # generate uid (unix ts + 6 random hex char)
-  tx_obj.uid = utility.gen_uid()
+  _tx_obj.uid = utility.gen_uid()
 
   # generate datetime (unix timestamp)
-  tx_obj.datetime = utility.gen_unix_timestamp()
+  _tx_obj.datetime = utility.gen_unix_timestamp()
 
   # get the description
   print "Enter a description or press ENTER to use defaults"
-  tx_obj.description = utility.get_input()
-  if tx_obj.description.lower() == "q":
+  _tx_obj.description = utility.get_input()
+  if _tx_obj.description.lower() == "q":
     return utility.call_main()
 
   # check the transaction type (credit or debit)
@@ -61,8 +91,8 @@ def create_tx():
       print "Enter credit amount: "
       _input = utility.get_input()
       try:
-        tx_obj.credit = float(_input)
-        tx_obj.debit = float(0)
+        _tx_obj.credit = float(_input)
+        _tx_obj.debit = float(0)
       except ValueError:
         print "Invalid input"
         tx_amount()
@@ -70,8 +100,8 @@ def create_tx():
       print "Enter debit amount: "
       _input = utility.get_input()
       try:
-        tx_obj.debit = float(_input)
-        tx_obj.credit = float(0)
+        _tx_obj.debit = float(_input)
+        _tx_obj.credit = float(0)
       except ValueError:
         print "Invalid input"
         tx_amount()
@@ -83,24 +113,24 @@ def create_tx():
   # calculate the balance
   # if there is no previous tx, set balance to credit amount
   if len(io.database) == 0:
-    tx_obj.balance = tx_obj.credit
+    _tx_obj.balance = _tx_obj.credit
   # if there is a previous tx, set balance to previous balance +/- credit and debit amounts
   else:
     _db_len = len(io.database)
     _prev_balance = io.database[_db_len - 1]["balance"]
-    tx_obj.balance = _prev_balance + float(tx_obj.credit) - float(tx_obj.debit)
+    _tx_obj.balance = _prev_balance + float(_tx_obj.credit) - float(_tx_obj.debit)
 
   # create a description using tx type if no description given
-  if tx_obj.description == "":
-    if tx_obj.credit > 0:
-      tx_obj.description = "Credit"
-    elif tx_obj.debit > 0:
-      tx_obj.description = "Debit"
+  if _tx_obj.description == "":
+    if _tx_obj.credit > 0:
+      _tx_obj.description = "Credit"
+    elif _tx_obj.debit > 0:
+      _tx_obj.description = "Debit"
     else:
-      tx_obj.description = "Other"
+      _tx_obj.description = "Other"
   
   # check against schema, err = print & recall create
-  _tx_validation = utility.validate_tx(tx_obj)
+  _tx_validation = utility.validate_tx(_tx_obj)
   if not _tx_validation["valid"]:
     print ""
     print "Transaction is not valid, please try again:"
@@ -111,35 +141,11 @@ def create_tx():
 
   # display new tx for visual confirmation
   print ""
+  print "Transaction to be created:"
   print utility.cli_separator
-  print "Transaction:"
-  print "uid: {0}".format(tx_obj.uid)
-  print "datetime: {0}".format(tx_obj.datetime)
-  print "description: {0}".format(tx_obj.description)
-  print "credit: {0}".format(tx_obj.credit)
-  print "debit: {0}".format(tx_obj.debit)
-  print "balance: {0}".format(tx_obj.balance)
+  utility.pretty_print_tx(_tx_obj)
   print utility.cli_separator
 
-  # confirm create, no = print & recall
-  def confirm_create():
-    print "Is this correct? (y/n)"
-    _confirm_create = utility.get_input()
-    if _confirm_create == "y":
-      # add to database
-      io.database.append(tx_obj.as_dict())
-      # save current database var to db.json file (overwrite)
-      io.save_db()
-
-      print "Transaction creation successful"
-      print "Press ENTER to return to main menu"
-      utility.get_input()
-      return utility.call_main()
-    elif _confirm_create == "n":
-      print "Press ENTER to return to main menu"
-      utility.get_input()
-      return utility.call_main()
-    else:
-      print "Invalid input"
-      confirm_create()
   confirm_create()
+
+  return True
