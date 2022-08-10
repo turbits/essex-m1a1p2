@@ -33,13 +33,13 @@ def sort_display_all_tx():
   print "\nSort Transactions"
   print utility.cli_separator
   print "Choose a property from the list to sort by:"
-  print "datetime, credit, debit, balance"
+  print "uid, datetime, description, credit, debit, balance"
   print "Input q to return to the main menu"
 
   _prop = utility.get_input()
   if _prop == "q":
     return utility.call_main()
-  if _prop not in ["datetime", "credit", "debit", "balance"]:
+  if _prop not in ["uid", "datetime", "description", "credit", "debit", "balance"]:
     print "\nNot a valid property, please try again"
     print "Press ENTER to retry operation"
     utility.get_input()
