@@ -24,6 +24,8 @@ def create_tx(tx_obj=None):
   def confirm_create():
     print "Is this correct? (y/n)"
     _confirm_create = utility.get_input()
+    if tx_obj is not None:
+      return
     if _confirm_create == "y":
       # add to database
       io.database.append(_tx_obj.as_dict())
@@ -45,9 +47,10 @@ def create_tx(tx_obj=None):
   # bypass creation if tx_obj passed in
   if tx_obj is not None:
     print "Transaction to be created:"
-    print utility.cli_seperator
-    utility.pretty_print_tx(tx_obj)
-    print utility.cli_seperator
+    print utility.cli_separator
+    _tx_obj = tx_obj
+    utility.pretty_print_tx(_tx_obj)
+    print utility.cli_separator
     confirm_create()
 
   print ""
