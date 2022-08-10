@@ -20,30 +20,6 @@ def create_tx(tx_obj=None):
   _prev_balance = None
   _bal_change_op = None
 
-  # confirm create, no = print & recall
-  def confirm_create():
-    print "Is this correct? (y/n)"
-    _confirm_create = utility.get_input()
-    if tx_obj is not None:
-      return
-    if _confirm_create == "y":
-      # add to database
-      io.database.append(_tx_obj.as_dict())
-      # save current database var to db.json file (overwrite)
-      io.save_db()
-
-      print "Transaction creation successful"
-      print "Press ENTER to return to main menu"
-      utility.get_input()
-      return utility.call_main()
-    elif _confirm_create == "n":
-      print "Press ENTER to return to main menu"
-      utility.get_input()
-      return utility.call_main()
-    else:
-      print "Invalid input"
-      confirm_create()
-
   # bypass creation if tx_obj passed in
   if tx_obj is not None:
     print "Transaction to be created:"
@@ -51,7 +27,8 @@ def create_tx(tx_obj=None):
     _tx_obj = tx_obj
     utility.pretty_print_tx(_tx_obj)
     print utility.cli_separator
-    confirm_create()
+    
+    
 
   print ""
   print "Creating a new transaction"
@@ -148,6 +125,28 @@ def create_tx(tx_obj=None):
   print utility.cli_separator
   utility.pretty_print_tx(_tx_obj)
   print utility.cli_separator
+
+  # confirm create, no = print & recall
+  def confirm_create():
+    print "Is this correct? (y/n)"
+    _confirm_create = utility.get_input()
+    if _confirm_create == "y":
+      # add to database
+      io.database.append(_tx_obj.as_dict())
+      # save current database var to db.json file (overwrite)
+      io.save_db()
+
+      print "Transaction creation successful"
+      print "Press ENTER to return to main menu"
+      utility.get_input()
+      return utility.call_main()
+    elif _confirm_create == "n":
+      print "Press ENTER to return to main menu"
+      utility.get_input()
+      return utility.call_main()
+    else:
+      print "Invalid input"
+      confirm_create()
 
   confirm_create()
 
