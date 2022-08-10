@@ -54,6 +54,7 @@ def delete_db():
   os.remove(db_path)
   print "Database file deleted: ./db.json"
 
+# DEBUG
 def get_db_var():
   print database
 

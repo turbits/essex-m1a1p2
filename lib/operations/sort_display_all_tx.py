@@ -13,9 +13,14 @@ from ..transaction import Transaction
 from .. import io
 from display_all_tx import display_all_tx
 
-
-def sort_display_all_tx(order = "none"):
+def sort_display_all_tx():
   _temp_tx = Transaction("", 0, 0, 0, "", "")
+  _original_data = io.database
+  _sorted_data = []
+  _order = None
+  # this (_reverse) is an extra var just to keep the initial flowcharts relevant,
+  # probably a good reason to write a prototype along with flowcharts :^)
+  _reverse = False
 
   # list empty = print & main
   if len(io.database) == 0:
@@ -24,72 +29,65 @@ def sort_display_all_tx(order = "none"):
     utility.get_input()
     return utility.call_main()
 
-  # entry
+  # get property to sort by
   print "\nSort Transactions"
   print utility.cli_separator
-  print "Choose a property from the list to sort by"
+  print "Choose a property from the list to sort by:"
+  print "datetime, credit, debit, balance"
   print "Input q to return to the main menu"
-  
-  # get property
-  print """1: datetime
-2: credit
-3: debit
-4: balance
-  """
 
-  _choice = utility.get_input()
-  _prop = ""
-  if _choice == "q":
+  _prop = utility.get_input()
+  if _prop == "q":
     return utility.call_main()
-  elif _choice == "1":
-    _prop = "datetime"
-  elif _choice == "2":
-    _prop = "credit"
-  elif _choice == "3":
-    _prop = "debit"
-  elif _choice == "4":
-    _prop = "balance"
-
-  
-  # check property exists in schema, err = print & recall
-  if not getattr(_temp_tx, str(_prop)):
-    print "'{0}' is not a valid property on Transaction object".format(_prop)
+  if _prop not in ["datetime", "credit", "debit", "balance"]:
+    print "\nNot a valid property, please try again"
     print "Press ENTER to retry operation"
     utility.get_input()
     return sort_display_all_tx()
 
-  # get order; on invalid order recall func (none, dec, inc)
-  _choice = utility.get_input()
-  _order = order
-  print "Choose a sort order; if none is provided this operation"
-  print "will use the passed in value, by default 'none'"
-  print "Sort order: {0}".format(order)
-  print """1: None; will not sort the dataset
-2: Dec : will sort the dataset DECREMENTING
-3: Inc : will sort the dataset INCREMENTING
+  # get order to sort by; on invalid order recall func (none, dec, inc)
+  print "\nChoose a sort order"
+  print """1: None: No sort order, will return tx database as-is
+2: Dec : Will sort the dataset DECREMENTING/DESCENDING
+3: Inc : Will sort the dataset INCREMENTING/ASCENDING
 q: Exit to main menu"""
+
+  _choice = utility.get_input()
 
   if _choice == "q":
     return utility.call_main()
   elif _choice == "1":
-    _order = "none"
+    # order is none, just display all tx in db
+    return display_all_tx()
   elif _choice == "2":
+    # choice is descending, in Python sorted() func this is True
     _order = "dec"
+    _reverse = True
   elif _choice == "3":
+    # choice is ascending, in Python sorted() func this is False
     _order = "inc"
+    _reverse = False
   else:
     print "Invalid choice"
+    print "Press ENTER to retry operation"
+    utility.get_input()
     return sort_display_all_tx()
-  
-  # if order = none, display data as-is (call display_all_tx())
-  display_all_tx()
-  print "Press ENTER to return to main menu"
-  utility.get_input()
-  utility.call_main()
 
-  # get data
-
-  # sort data by prop/order and store in new dict/arr
+  # sort data by prop/order
+  _sorted_data = sorted(_original_data, key=lambda p: p[str(_prop)], reverse=_reverse)
 
   # display sorted data
-
+  print ""
+  print "Sorted Transactions"
+  print utility.cli_separator
+  print "Sorted by: {0}".format(_prop)
+  print "Order: {0}".format(_order)
+  print utility.cli_separator
+  for tx in _sorted_data:
+    utility.pretty_print_tx(tx, True)
+    print utility.cli_separator
+  
+  # end
+  print "\nPress ENTER to return to main menu"
+  utility.get_input()
+  return utility.call_main()

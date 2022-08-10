@@ -35,8 +35,12 @@ def print_cwd():
   print ""
 
 def gen_unix_timestamp():
-  # gets the current unix timestamp, truncated
+  # gets the current unix timestamp, truncated, and returns it
   return str(int(time.time()))
+
+def get_human_timestamp(unix_timestamp):
+  # converts a unix timestamp to a human readable datetime and returns it
+  return datetime.fromtimestamp(int(unix_timestamp).strftime('%d/%m/%Y %H:%M:%S'))
 
 def gen_hex():
   # generates a random hexadecimal string of length 6
