@@ -1,6 +1,6 @@
 # Bankbook Program
 
-I coded this program as part of the "Launching into Computer Science" course at the University of Essex.
+I coded this program as part of the **Launching into Computer Science** course at the University of Essex.
 
 Module: Launching into Computer Science
 Assignment: 1, Part 2
