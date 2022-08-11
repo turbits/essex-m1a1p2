@@ -24,6 +24,14 @@ database = None
 def show_title():
   print ascii_art.title
 
+def create_tx_menu():
+  print "Create Transaction"
+  print utility.cli_separator
+  _desc = raw_input("Please provide a description of the transaction:\n$")
+  _credit = raw_input("Please provide the credit amount:\n$")
+  _debit = raw_input("Please provide the debit amount:\n$")
+    create_tx()
+
 def main_menu():
   print ""
   show_title()
@@ -56,7 +64,7 @@ q: Exit program"""
   if choice == "q":
     exit()
   elif choice == "1":
-    create_tx()
+    create_tx_menu()
   elif choice == "2":
     read_tx(True)
   elif choice == "3":

@@ -16,15 +16,15 @@ import io
 cli_prompt = "$"
 cli_separator = "============================================="
 
-def get_input(lower=True):
-  if lower:
-    return raw_input("{0} ".format(cli_prompt).lower())
+def get_input(text=None):
+  if text is not None:
+    return raw_input("{0}:\n{1} ".format(text, cli_prompt).lower())
   else:
-    return raw_input("{0} ".format(cli_prompt))
+    return raw_input("{0} ".format(cli_prompt).lower())
 
 def call_main():
   # call the main script
-  os.system("python bankbook.py")
+  os.system("python main.py")
 
 def print_cwd():
   print ""
@@ -35,8 +35,8 @@ def print_cwd():
   print ""
 
 def gen_unix_timestamp():
-  # gets the current unix timestamp, truncated, and returns it
-  return str(int(time.time()))
+  # gets the current unix timestamp, truncated (convert to int to remove millisecond decimals), and returns it
+  return int(time.time())
 
 def get_human_timestamp(unix_timestamp):
   # converts a unix timestamp to a human readable datetime and returns it
@@ -50,7 +50,7 @@ def gen_uid():
   # concatenates the timestamp and the hex string together to get a UID
   _timestamp = gen_unix_timestamp()
   _hex = gen_hex()
-  return _timestamp + _hex
+  return str(_timestamp) + _hex
 
 def show_tx_schema():
   # in case we want to see the schema
@@ -75,9 +75,9 @@ def validate_tx(tx):
   if not isinstance(tx.uid, str):
     _valid = False
     _error = "uid is not a string"
-  elif not isinstance(tx.datetime, str):
+  elif not isinstance(tx.datetime, int):
     _valid = False
-    _error = "datetime is not a string"
+    _error = "datetime is not an int"
   elif not isinstance(tx.description, str):
     _valid = False
     _error = "description is not a string"
