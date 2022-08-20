@@ -13,12 +13,13 @@ from .. import utility
 from .. import io
 from ..transaction import Transaction
 
-# create_tx(tx)
+# insert_tx(tx)
 # takes in a tx object
 # generates a uid, datetime, and description if none provided
+# calculates the balance
 # validates the transaction
-# adds the transaction to the database
-def create_tx(tx_obj):
+# inserts the transaction into the database
+def insert_tx(tx_obj):
   _tx_obj = Transaction(uid=tx_obj.uid, datetime=tx_obj.datetime, description=tx_obj.description, credit=tx_obj.credit, debit=tx_obj.debit, balance=tx_obj.balance)
   _prev_balance = None
   _db_length = len(io.database)
@@ -36,11 +37,7 @@ def create_tx(tx_obj):
     _tx_obj.description = "credit" if _tx_obj.credit > 0 else "debit"
   
   # calculate the balance
-  if _db_length == 0:
-    _tx_obj.balance = _tx_obj.credit
-  else:
-    _prev_balance = io.database[_db_length - 1]["balance"]
-    _tx_obj.balance = float(_prev_balance + _tx_obj.credit - _tx_obj.debit)
+  _tx_obj.balance = utility.calculate_new_tx_balance(_tx_obj)
 
   # validate the transaction
   _tx_validation = utility.validate_tx(_tx_obj)
@@ -50,7 +47,7 @@ def create_tx(tx_obj):
     print _tx_validation["error"]
     return False
 
-  # add the transaction to the database
+  # insert the transaction into the database
   try:
     io.database.append(_tx_obj.as_dict())
     io.save_db()

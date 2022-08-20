@@ -9,49 +9,14 @@
 # +===================================================================+
 
 import os
-from lib.transaction import Transaction
-from lib.operations.create_tx import create_tx
+from lib.menus import create_tx_menu
+from lib.menus import delete_tx_menu
 from lib import ascii_art
 from lib import utility
 from lib import io
 
 def show_title():
   print ascii_art.title
-
-def create_tx_menu():
-  _tx_obj = Transaction("", 0, "", 0, 0, 0)
-  print "Create Transaction"
-  print utility.cli_separator
-  
-  # get description
-  _tx_obj.description = utility.get_input("Please provide a description of the transaction")
-  
-  # determine credit or debit and amount
-  _credit_or_debit = utility.get_input("Is this a credit or a debit transaction? (c/d)")
-  _amount = utility.get_input("Please provide the amount of the transaction")
-  if _credit_or_debit == "c":
-    _credit = float(_amount)
-    _debit = float(0.00)
-  elif _credit_or_debit == "d":
-    _debit = float(_amount)
-    _credit = float(0.00)
-  else:
-    print "Invalid selection"
-    create_tx_menu()
-
-  # confirm create
-  print utility.cli_separator
-  print "Confirm create transaction:"
-  utility.pretty_print_tx(_tx_obj)
-  print utility.cli_separator
-  _confirm_create = utility.get_input("Are you sure you want to create this transaction? (y/n)")
-  if _confirm_create == "y":
-    # create transaction
-    return create_tx(_tx_obj)
-  else:
-    print "Transaction creation cancelled"
-    utility.get_input("Press ENTER to return to main menu")
-    __main__()
 
 def __main__():
   print "\n{0}".format(ascii_art.title)
@@ -72,7 +37,7 @@ def __main__():
   print "Current account balance: ${:,.2f}".format(_balance)
   print utility.cli_separator
   print "Please select an option:"
-  print """1: Create transaction
+  print """1: Create/insert transaction
 2: Read/find transaction(s)
 3: Update transaction
 4: Delete transaction
@@ -88,12 +53,17 @@ q: Exit program"""
   elif choice == "1":
     _success = create_tx_menu()
     print _success
+    raw_input("")
+    return __main__()
   elif choice == "2":
     pass
   elif choice == "3":
     pass
   elif choice == "4":
-    pass
+    _success = delete_tx_menu()
+    print _success
+    raw_input("")
+    return __main__()
   elif choice == "5":
     pass
   elif choice == "6":

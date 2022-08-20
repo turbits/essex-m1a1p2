@@ -110,6 +110,17 @@ def recalculate_balances(index):
       io.database[i]["balance"] = io.database[i - 1]["balance"] + io.database[i]["credit"] - io.database[i]["debit"]
   return
 
+def calculate_new_tx_balance(tx_obj):
+  _db_length = len(io.database)
+  _bal = tx_obj.balance
+  # calculate the balance
+  if _db_length == 0:
+    _bal = float(tx_obj.credit) if tx_obj.credit > 0 else float(tx_obj.debit)
+  else:
+    _prev_bal = io.database[_db_length - 1]["balance"]
+    _bal = float(_prev_bal + tx_obj.credit - tx_obj.debit)
+  return _bal
+
 def pretty_print_tx(tx, dict=False):
   # dict dot notation not supported in Python 2.x?
   if dict:
@@ -129,9 +140,17 @@ credit: {3}
 debit: {4}
 balance: {5}""".format(tx.uid, tx.datetime, tx.description, tx.credit, tx.debit, tx.balance)
 
-def find_index_by_uid(uid):
+def get_index_by_tx_uid(uid):
   # finds the index of a transaction by its uid
   for i, dict in enumerate(io.database):
     if dict["uid"] == uid:
       return i
   return -1
+
+def get_tx_by_uid(uid):
+  # finds the transaction by its uid
+  _index = get_index_by_tx_uid(uid)
+  if _index == -1:
+    return None
+  else:
+    return io.database[_index]

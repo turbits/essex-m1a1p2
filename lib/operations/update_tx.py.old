@@ -33,7 +33,7 @@ def update_tx():
   # find tx by uid, none = print & recall
   try:
     _old_tx = read_tx(False, _uid)
-    _old_tx_index = utility.find_index_by_uid(_old_tx["uid"])
+    _old_tx_index = utility.get_index_by_tx_uid(_old_tx["uid"])
   except:
     print "Transaction not found, please try again"
     update_tx()
