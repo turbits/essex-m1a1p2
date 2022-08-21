@@ -9,13 +9,15 @@
 # +===================================================================+
 
 import os
+from lib import io
+from lib import utility
+from lib import ascii_art
+from lib.operations.search_tx import search_tx
 from lib.menus.create_tx_menu import create_tx_menu
 from lib.menus.delete_tx_menu import delete_tx_menu
 from lib.menus.search_tx_menu import search_tx_menu
 from lib.menus.sort_tx_menu import sort_tx_menu
-from lib import ascii_art
-from lib import utility
-from lib import io
+
 
 def show_title():
   print ascii_art.title
@@ -41,12 +43,11 @@ def __main__():
   print "Please select an option:"
   print """1: Create/insert transaction
 2: Search transaction(s)
-3: Update transaction
-4: Delete transaction
-5: Sort transactions
-6: Show all transactions
-7: Display transaction schema
-8: Delete and recreate database
+3: Delete transaction
+4: Sort transactions
+5: Display all transactions
+6: Display transaction schema
+7: Delete and recreate database
 t: Run test suite
 q: Exit program"""
   print utility.cli_separator
@@ -59,26 +60,22 @@ q: Exit program"""
   elif choice == "2":
     _tx_list = search_tx_menu()
     if _tx_list == [] or _tx_list == False:
-      print "ERROR: No transactions found"
       _success = False
     else:
       _success = True
       print _tx_list
   elif choice == "3":
-    pass
-  elif choice == "4":
     _success = delete_tx_menu()
-  elif choice == "5":
-    # SORT
+  elif choice == "4":
     _success = sort_tx_menu()
-  elif choice == "6":
+  elif choice == "5":
     # show all transactions
     search_tx("", "", True)
     _success = True
-  elif choice == "7":
+  elif choice == "6":
     utility.show_tx_schema()
     _success = True
-  elif choice == "8":
+  elif choice == "7":
     print ""
     print "Database Deletion"
     print utility.cli_separator
@@ -89,14 +86,15 @@ q: Exit program"""
       # second confirm
       _confirm_delete = utility.get_input("Are you absolutely sure you want to recreate the database? (y/n)")
     if _confirm_delete == "y":
-      # recreate db
-      io.delete_db()
-      io.create_db()
-      utility.get_input("Press ENTER to return to main menu")
-      return __main__()
+      try:
+        # recreate db
+        io.delete_db()
+        io.create_db()
+        _success = True
+      except:
+        _success = False
     else:
-      utility.get_input("Press ENTER to return to main menu")
-      return __main__()
+      _success = False
   elif choice == "t":
     # test suite
     return os.system("python test.py")

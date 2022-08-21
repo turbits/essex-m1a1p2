@@ -11,11 +11,13 @@
 from .. import io
 from .. import utility
 
-# returns a list
+# returns a list or None
 def search_tx(prop, value, all_txs=False):
   _tx_list = io.database
   _tx_list_filtered = []
-  if all_txs:
+  if len(_tx_list) == 0:
+    return None
+  elif all_txs:
     _tx_list_filtered = _tx_list
   else:
     for _tx in _tx_list:

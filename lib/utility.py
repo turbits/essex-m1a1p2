@@ -157,6 +157,6 @@ def get_tx_by_uid(uid):
   else:
     return io.database[_index]
 
-def gen_test_result_text(text, result):
-  _r = "Passed" if test_results.create == True else "Failed"
+def gen_test_result(text, result):
+  _r = "Passed" if result == True else "Failed"
   return "{0}: {1}".format(text, _r)
