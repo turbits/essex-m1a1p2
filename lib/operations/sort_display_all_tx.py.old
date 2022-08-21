@@ -86,7 +86,7 @@ q: Exit to main menu"""
   for tx in _sorted_data:
     utility.pretty_print_tx(tx, True)
     print utility.cli_separator
-  
+
   # end
   print "\nPress ENTER to return to main menu"
   utility.get_input()

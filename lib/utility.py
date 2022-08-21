@@ -18,9 +18,11 @@ cli_separator = "============================================="
 
 def get_input(text=None):
   if text is not None:
-    return raw_input("{0}:\n{1} ".format(text, cli_prompt).lower())
+    _in = raw_input("{0}:\n{1} ".format(text, cli_prompt))
+    return _in.lower()
   else:
-    return raw_input("{0} ".format(cli_prompt).lower())
+    _in = raw_input("{0} ".format(cli_prompt))
+    return _in.lower()
 
 def call_main():
   # call the main script
@@ -102,7 +104,7 @@ def get_balance():
     return io.database[len(io.database) - 1]["balance"]
 
 def recalculate_balances(index):
-  # recalc balance of all txs after index
+  # recalc balance of all txs at and after the given index
   for i in range(index, len(io.database)):
     if i == 0:
       io.database[i]["balance"] = io.database[i]["credit"]
@@ -142,8 +144,8 @@ balance: {5}""".format(tx.uid, tx.datetime, tx.description, tx.credit, tx.debit,
 
 def get_index_by_tx_uid(uid):
   # finds the index of a transaction by its uid
-  for i, dict in enumerate(io.database):
-    if dict["uid"] == uid:
+  for i, tx in enumerate(io.database):
+    if tx["uid"] == uid:
       return i
   return -1
 
