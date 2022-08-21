@@ -16,6 +16,6 @@ def sort_tx(list, prop, rev):
     _sorted_data = list
   else:
     # sort transactions
-    _sorted_data = sorted(list, key=itemgetter(str(prop)), reverse=rev)
+    _sorted_data = sorted(list, key=itemgetter(prop), reverse=rev)
 
   return _sorted_data
