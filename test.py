@@ -50,6 +50,23 @@ def test_search_tx():
   test_results["search"] = _passed
   return _passed
 
+def test_delete_tx():
+  # create test tx with specific description
+  _tx_obj = Transaction(uid="", datetime=0, description="test-delete", debit=0, credit=10, balance=200)
+
+  try:
+    # insert the tx
+    insert_tx(_tx_obj)
+    # search for the tx by description
+    _search_result = search_tx("description", "test-delete")
+    if _search_result not in [None, "", []] and _search_result[0]["description"] == "test-delete":
+      # remove test tx
+      _passed = delete_tx(_search_result[0]["uid"])
+  except:
+    _passed = False
+  # result
+  test_results["delete"] = _passed
+  return _passed
 
 def test_all():
   test_insert_tx()
@@ -97,7 +114,8 @@ q: Exit to Main Menu"""
     raw_input("Press ENTER to return to testing menu")
     return test_menu()
   elif choice == "4":
-    # delete
+    test_delete_tx()
+    print gen_test_result("Delete Test Result", test_results["delete"])
     raw_input("Press ENTER to return to testing menu")
     return test_menu()
   elif choice == "5":
