@@ -47,8 +47,7 @@ def __main__():
 6: Show all transactions
 7: Display transaction schema
 8: Delete and recreate database
-w: DEBUG: Get DB var
-e: DEBUG: Get DB json
+t: Run test suite
 q: Exit program"""
   print utility.cli_separator
   choice = utility.get_input()
@@ -98,12 +97,9 @@ q: Exit program"""
     else:
       utility.get_input("Press ENTER to return to main menu")
       return __main__()
-  elif choice == "w":
-    io.get_db_var()
-    return __main__()
-  elif choice == "e":
-    io.get_db_json()
-    return __main__()
+  elif choice == "t":
+    # test suite
+    return os.system("python test.py")
   else:
     print "Invalid selection"
     return __main__()
