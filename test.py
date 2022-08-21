@@ -72,7 +72,7 @@ def test_sort_tx():
   # create first test tx
   _tx_obj_1 = Transaction(uid="", datetime=0, description="b_test-sort1", debit=0, credit=200, balance=0)
   # create second test tx
-  _tx_obj_2 = Transaction(uid="", datetime=0, description="a_test-sort2", debit=44, credit=0, balance=0)
+  _tx_obj_2 = Transaction(uid="", datetime=0, description="a_test-sort2", debit=0, credit=44, balance=0)
 
   _passed = False
   _passed_1 = False
@@ -90,14 +90,14 @@ def test_sort_tx():
   # add results to a list
   _search_results = [_search_result_1[0], _search_result_2[0]]
 
-  # Test 1: Sort by balance descending
-  # sort the transactions by balance (descending)
-  _sorted_txs = sort_tx(_search_results, "balance", True)
-  # check that the first tx is the highest balance
-  if _sorted_txs[0]["balance"] > _sorted_txs[1]["balance"]:
+  # Test 1: Sort by credit descending
+  # sort the transactions by credit (descending)
+  _sorted_txs = sort_tx(_search_results, "credit", True)
+  # check that the first tx is the highest credit
+  if _sorted_txs[0]["credit"] > _sorted_txs[1]["credit"]:
     _passed_1 = True
   else:
-    print "ERROR: First tx not highest balance"
+    print "ERROR: First tx not highest credit"
     _passed_1 = False
   
   # Test 2: Sort by description ascending

@@ -46,6 +46,8 @@ def get_human_timestamp(unix_timestamp):
 
 def gen_hex():
   # generates a random hexadecimal string of length 6
+  # see references for more info:
+  # https://stackoverflow.com/a/2511238
   return "".join(random.choice("0123456789ABCDEF") for i in range(6))
 
 def gen_uid():
