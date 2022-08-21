@@ -9,6 +9,7 @@
 # +===================================================================+
 
 from .. import utility
+from ..operations.delete_tx import delete_tx
 
 def delete_tx_menu():
   print "Delete Transaction"
@@ -18,11 +19,17 @@ def delete_tx_menu():
   _uid = utility.get_input("Please provide the UID of the transaction you wish to delete")
   if _uid == "q":
     exit()
+  
+  # check if uid exists
+  if not utility.get_index_by_tx_uid(_uid):
+    print "ERROR: Transaction with UID {0} does not exist".format(_uid)
+    return False
+
+  # delete transaction
+  _success = delete_tx(_uid)
+  if _success:
+    print "Transaction deleted"
+    return True
   else:
-    _success = delete_tx(_uid)
-    if _success:
-      print "Transaction deleted"
-    else:
-      print "Transaction not found"
-    raw_input("")
-    return __main__()
+    print "ERROR: Transaction could not be deleted"
+    return False
