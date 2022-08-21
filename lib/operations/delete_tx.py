@@ -11,6 +11,7 @@
 from .. import utility
 from .. import io
 
+# returns true or false
 def delete_tx(uid):
   _tx_obj = utility.get_tx_by_uid(uid)
   print "DEBUG: tx obj\n{0}".format(_tx_obj)
