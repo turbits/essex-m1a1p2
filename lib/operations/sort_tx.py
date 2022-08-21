@@ -10,6 +10,7 @@
 
 from operator import itemgetter
 
+# returns a list
 def sort_tx(list, prop, rev):
   _sorted_data = []
   if rev is None:

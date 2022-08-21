@@ -13,12 +13,7 @@ from .. import utility
 from .. import io
 from ..transaction import Transaction
 
-# insert_tx(tx)
-# takes in a tx object
-# generates a uid, datetime, and description if none provided
-# calculates the balance
-# validates the transaction
-# inserts the transaction into the database
+# returns true or false
 def insert_tx(tx_obj):
   _tx_obj = Transaction(uid=tx_obj.uid, datetime=tx_obj.datetime, description=tx_obj.description, credit=tx_obj.credit, debit=tx_obj.debit, balance=tx_obj.balance)
   _prev_balance = None

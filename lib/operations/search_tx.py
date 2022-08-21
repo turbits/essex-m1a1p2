@@ -11,6 +11,7 @@
 from .. import io
 from .. import utility
 
+# returns a list
 def search_tx(prop, value, all_txs=False):
   _tx_list = io.database
   _tx_list_filtered = []
