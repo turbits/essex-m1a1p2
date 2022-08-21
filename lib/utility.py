@@ -16,15 +16,17 @@ import io
 cli_prompt = "$"
 cli_separator = "============================================="
 
-def get_input(lower=True):
-  if lower:
-    return raw_input("{0} ".format(cli_prompt).lower())
+def get_input(text=None):
+  if text is not None:
+    _in = raw_input("{0}:\n{1} ".format(text, cli_prompt))
+    return _in.lower()
   else:
-    return raw_input("{0} ".format(cli_prompt))
+    _in = raw_input("{0} ".format(cli_prompt))
+    return _in.lower()
 
 def call_main():
   # call the main script
-  os.system("python bankbook.py")
+  os.system("python main.py")
 
 def print_cwd():
   print ""
@@ -35,8 +37,8 @@ def print_cwd():
   print ""
 
 def gen_unix_timestamp():
-  # gets the current unix timestamp, truncated, and returns it
-  return str(int(time.time()))
+  # gets the current unix timestamp, truncated (convert to int to remove millisecond decimals), and returns it
+  return int(time.time())
 
 def get_human_timestamp(unix_timestamp):
   # converts a unix timestamp to a human readable datetime and returns it
@@ -44,13 +46,15 @@ def get_human_timestamp(unix_timestamp):
 
 def gen_hex():
   # generates a random hexadecimal string of length 6
+  # see references for more info:
+  # https://stackoverflow.com/a/2511238
   return "".join(random.choice("0123456789ABCDEF") for i in range(6))
 
 def gen_uid():
   # concatenates the timestamp and the hex string together to get a UID
   _timestamp = gen_unix_timestamp()
   _hex = gen_hex()
-  return _timestamp + _hex
+  return str(_timestamp) + _hex
 
 def show_tx_schema():
   # in case we want to see the schema
@@ -75,9 +79,9 @@ def validate_tx(tx):
   if not isinstance(tx.uid, str):
     _valid = False
     _error = "uid is not a string"
-  elif not isinstance(tx.datetime, str):
+  elif not isinstance(tx.datetime, int):
     _valid = False
-    _error = "datetime is not a string"
+    _error = "datetime is not an int"
   elif not isinstance(tx.description, str):
     _valid = False
     _error = "description is not a string"
@@ -102,13 +106,24 @@ def get_balance():
     return io.database[len(io.database) - 1]["balance"]
 
 def recalculate_balances(index):
-  # recalc balance of all txs after index
+  # recalc balance of all txs at and after the given index
   for i in range(index, len(io.database)):
     if i == 0:
       io.database[i]["balance"] = io.database[i]["credit"]
     else:
       io.database[i]["balance"] = io.database[i - 1]["balance"] + io.database[i]["credit"] - io.database[i]["debit"]
   return
+
+def calculate_new_tx_balance(tx_obj):
+  _db_length = len(io.database)
+  _bal = tx_obj.balance
+  # calculate the balance
+  if _db_length == 0:
+    _bal = float(tx_obj.credit) if tx_obj.credit > 0 else float(tx_obj.debit)
+  else:
+    _prev_bal = io.database[_db_length - 1]["balance"]
+    _bal = float(_prev_bal + tx_obj.credit - tx_obj.debit)
+  return _bal
 
 def pretty_print_tx(tx, dict=False):
   # dict dot notation not supported in Python 2.x?
@@ -129,9 +144,21 @@ credit: {3}
 debit: {4}
 balance: {5}""".format(tx.uid, tx.datetime, tx.description, tx.credit, tx.debit, tx.balance)
 
-def find_index_by_uid(uid):
+def get_index_by_tx_uid(uid):
   # finds the index of a transaction by its uid
-  for i, dict in enumerate(io.database):
-    if dict["uid"] == uid:
+  for i, tx in enumerate(io.database):
+    if tx["uid"] == uid:
       return i
   return -1
+
+def get_tx_by_uid(uid):
+  # finds the transaction by its uid
+  _index = get_index_by_tx_uid(uid)
+  if _index == -1:
+    return None
+  else:
+    return io.database[_index]
+
+def gen_test_result(text, result):
+  _r = "Passed" if result == True else "Failed"
+  return "{0}: {1}".format(text, _r)

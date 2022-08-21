@@ -11,20 +11,20 @@
 import utility
 
 class Transaction:
-  def __init__(self, description, credit, debit, balance, datetime="", uid=""):
+  def __init__(self, uid, datetime, description, credit, debit, balance):
     self.uid = utility.gen_uid()
     self.datetime = utility.gen_unix_timestamp()
     self.description = description
-    self.credit = credit
-    self.debit = debit
-    self.balance = balance
+    self.credit = float(credit)
+    self.debit = float(debit)
+    self.balance = float(balance)
 
   def as_dict(self):
     return {
       "uid": self.uid,
       "datetime": self.datetime,
       "description": self.description,
-      "credit": self.credit,
-      "debit": self.debit,
-      "balance": self.balance
+      "credit": float(self.credit),
+      "debit": float(self.debit),
+      "balance": float(self.balance)
     }
