@@ -73,7 +73,7 @@ q: Exit program"""
     _transactions = search_tx("", "", True)
     for _tx in _transactions:
       print utility.cli_separator
-      utility.pretty_print_tx(_tx)
+      utility.pretty_print_tx(_tx, True)
       print utility.cli_separator
     _success = True
   elif choice == "6":
