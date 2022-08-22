@@ -70,7 +70,11 @@ q: Exit program"""
     _success = sort_tx_menu()
   elif choice == "5":
     # show all transactions
-    search_tx("", "", True)
+    _transactions = search_tx("", "", True)
+    for _tx in _transactions:
+      print utility.cli_separator
+      utility.pretty_print_tx(_tx)
+      print utility.cli_separator
     _success = True
   elif choice == "6":
     utility.show_tx_schema()
